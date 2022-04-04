@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import io from 'socket.io-client';
+import {connect} from 'react-redux';
 import '../chat.css';
 
 class Chat extends Component {
@@ -9,11 +11,15 @@ class Chat extends Component {
       messages: [],
       typedMessage: '',
     };
+
+    this.socket = io.connect('http://54.237.158.65:5000');
+    this.userEmail = null;
+    console.log('Props chat ', props);
   }
 
-  handleSubmit = () => {
+  // handleSubmit = () => {
     
-  }
+  // };
 
   render() {
     const { typedMessage, messages } = this.state;
@@ -49,4 +55,10 @@ class Chat extends Component {
   }
 }
 
-export default Chat;
+function mapStateToProps({ auth }){
+  return {
+    user: auth.user
+  }
+}
+
+export default connect(mapStateToProps)(Chat);
