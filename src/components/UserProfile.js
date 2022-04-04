@@ -24,6 +24,18 @@ class UserProfile extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const {
+      match: { params: prevParams },
+    } = prevProps;
+    const {
+      match: { params: currentParams },
+    } = this.props;
+    if (prevParams && currentParams && prevParams.userId !== currentParams.userId) {
+      this.props.dispatch(fetchUserProfile(currentParams.userId));
+    }
+  }
+
   checkIfUserIsAFriend = () => {
     const { match, friends } = this.props;
     const userId = match.params.userId;
@@ -55,7 +67,7 @@ class UserProfile extends Component {
     if (data.success) {
       this.setState({
         success: true,
-        successMessage: 'Added Friend Successfully!'
+        successMessage: 'Added Friend Successfully!',
       });
 
       this.props.dispatch(addFriend(data.data.friendship));
@@ -68,7 +80,7 @@ class UserProfile extends Component {
   };
 
   handleRemoveFriendClick = async () => {
-    const {match} = this.props;
+    const { match } = this.props;
     const url = APIUrls.removeFriend(match.params.userId);
 
     const extra = {
@@ -85,7 +97,7 @@ class UserProfile extends Component {
     if (data.success) {
       this.setState({
         success: true,
-        successMessage: 'Removed Friend Successfully!'
+        successMessage: 'Removed Friend Successfully!',
       });
 
       this.props.dispatch(removeFriend(data.data.friendship));
@@ -148,9 +160,7 @@ class UserProfile extends Component {
           )}
 
           {success && (
-            <div className="alert success-dailog">
-             {successMessage}
-            </div>
+            <div className="alert success-dailog">{successMessage}</div>
           )}
 
           {error && <div className="alert error-dailog">{error}</div>}
